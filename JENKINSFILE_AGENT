@@ -1,0 +1,80 @@
+pipeline   {
+    agent any
+    stages {
+        stage ('Get Code') {
+           agent { label 'windows'}
+           steps {
+                // Obtener codigo del repo
+                git 'https://github.com/hernancastel/helloworld.git'
+                stash includes: '**/*', name: 'getCode'
+            }
+        }
+    
+        stage ('Build') {
+           agent { label 'python'}
+           steps {
+                unstash 'getCode'
+                echo 'Eeyy, esto es Python. no hay que compilar nada'
+                echo WORKSPACE
+                bat 'dir'
+                stash includes: '**/*', name: 'build'
+            }
+        }
+
+        stage('Test') {
+            parallel {
+                
+                
+                stage('Unit') {
+                        agent { label 'testUnit'}
+                        steps {
+                            unstash 'getCode'
+                           catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                                bat '''
+                                    set PYTHONPATH=%WORKSPACE%
+                                    C:\\Users\\54116\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\pytest --junitxml=result-unit.xml test\\unit
+                                '''
+                          }
+                          stash includes: '**/*', name: 'unit'
+                        }
+                    }   
+        
+
+
+                    stage('Rest-Servicios') {
+                        agent {label 'rest'}
+                        steps {
+                            unstash 'getCode'
+                           catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                            bat '''
+                                set FLASK_APP=app\\api.py
+                                set FLASK_ENV=development
+                                start /B flask run
+                                start /B java -jar C:\\Users\\54116\\Desktop\\Unir\\Programas\\wiremock-standalone-3.3.1.jar --port 9090 --root-dir C:\\Users\\54116\\repos\\helloworld\\test\\wiremock\\mappings
+                                set PYTHONPATH=%WORKSPACE%
+                                C:\\Users\\54116\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\pytest --junitxml=result-rest.xml test\\rest
+                                '''
+                        }
+                        stash includes: '**/*', name: 'restServicios'
+
+                      }    
+                    }
+
+
+            }
+        }
+
+
+        stage('Results') {
+            agent {label 'results'}
+
+            steps {
+                unstash 'unit'
+                unstash 'restServicios'
+                junit 'result*.xml' 
+            }
+        }
+        
+        
+    }
+}
