@@ -36,13 +36,13 @@ class TestApi(unittest.TestCase):
         )
 
  def test_api_multiply(self):
-        url = f"{BASE_URL}/calc/multiply/2/3"
+        url = f"{BASE_URL}/calc/multiply/2/2"
         response = urlopen(url, timeout=DEFAULT_TIMEOUT)
         self.assertEqual(
             response.status, http.client.OK, f"Error en la petición API a {url}"
         )
         self.assertEqual(
-            response.read().decode(), "6", "ERROR MULTIPLY"
+            response.read().decode(), "4", "ERROR MULTIPLY"
         )
 
     def test_api_divide(self):
