@@ -52,6 +52,7 @@ pipeline   {
                                 start /B flask run
                                 start /B java -jar C:\\Users\\54116\\Desktop\\Unir\\Programas\\wiremock-standalone-3.3.1.jar --port 9090 --root-dir C:\\Users\\54116\\repos\\helloworld\\test\\wiremock\\mappings
                                 set PYTHONPATH=%WORKSPACE%
+                                timeout 15
                                 C:\\Users\\54116\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\pytest --junitxml=result-rest.xml test\\rest
                                 '''
                         }
