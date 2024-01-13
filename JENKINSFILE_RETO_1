@@ -49,7 +49,9 @@ pipeline   {
                C:\\Users\\54116\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\coverage run --source=app --omit=app\\__init__.py.app\\api.py -m pytest test\\unit
                C:\\Users\\54116\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\coverage xml
                '''
-              cobertura coberturaReportFile: './coverage.xml'
+               def coberturaReportPath = "%WORKSPACE%\\coverage.xml"
+
+              cobertura coberturaReportFile: coberturaReportPath
     
             }
         }
