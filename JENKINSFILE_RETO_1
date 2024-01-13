@@ -80,7 +80,7 @@ pipeline   {
                         whoami
                         hostname
                     '''
-                  perfReport sourceDataFiles: 'flask.jlt'
+                  perfReport sourceDataFiles: 'flask.jtl'
                 }
             }
         }
