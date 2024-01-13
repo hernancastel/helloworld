@@ -41,12 +41,14 @@ pipeline   {
         
 
       stage ('Cobertura') {
+            agent { label 'windows'}
            steps {
                bat '''
                SET PYTHONPATH=.
                C:\\Users\\54116\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\coverage run --source=app --omit=app\\__init__.py.app\\api.py -m pytest test\\unit
                C:\\Users\\54116\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\coverage xml
                '''
+               unstash 'getCode'
               cobertura coberturaReportFile: 'coverage.xml'
     
             }
