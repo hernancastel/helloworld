@@ -7,7 +7,7 @@ pipeline   {
                 // Obtener codigo del repo
                 git 'https://github.com/hernancastel/helloworld.git'
                 stash includes: '**/*', name: 'getCode'
-                echo "Workspace: ${WORKSPACE}"
+                echo "el Workspace es: ${WORKSPACE}"
             }
         }
         
@@ -19,7 +19,8 @@ pipeline   {
                         set PYTHONPATH=%WORKSPACE%
                        C:\\Users\\54116\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\coverage run --branch --source=app --omit=app\\__init__.py.app\\api.py -m pytest test\\unit
                     '''
-                    junit 'result*.xml' 
+                    junit 'result*.xml'
+                    echo "el Workspace es: ${WORKSPACE}"
               }
             }
         }   
@@ -35,6 +36,7 @@ pipeline   {
                        hostname
                    '''
                   cobertura coberturaReportFile: 'coverage.xml', conditionalCoverageTargets: '100,80,90', lineCoverageTargets: '100,85,95',  failUnstable: false
+                  echo "el Workspace es: ${WORKSPACE}"
                 }
             }
         }
@@ -50,9 +52,11 @@ pipeline   {
                     recordIssues tools: [pyLint(name: 'bandit', pattern: 'bandit.out')], qualityGates : [
                     [threshold: 2, type: 'TOTAL', unstable: true], 
                     [threshold: 4, type: 'TOTAL', unstable: false]]
+                    echo "el Workspace es: ${WORKSPACE}"
                 }
             }
         }
+
         stage('Static'){
             steps {
                 catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE' ){
@@ -64,6 +68,7 @@ pipeline   {
                     recordIssues tools: [flake8(name: 'Flake8', pattern: 'flake8.out')], qualityGates : [
                         [threshold: 8,  type: 'TOTAL', unstable: true],
                         [threshold: 10, type: 'TOTAL', unstable: false]]
+                    echo "el Workspace es: ${WORKSPACE}"
                 }
             }
         }
@@ -82,7 +87,8 @@ pipeline   {
                         whoami
                         hostname
                     '''
-                  perfReport sourceDataFiles: 'flask.jlt'
+                    perfReport sourceDataFiles: 'flask.jlt'
+                    echo "el Workspace es: ${WORKSPACE}"
                 }
             }
         }
