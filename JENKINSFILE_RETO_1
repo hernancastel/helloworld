@@ -7,6 +7,7 @@ pipeline   {
                 // Obtener codigo del repo
                 git 'https://github.com/hernancastel/helloworld.git'
                 stash includes: '**/*', name: 'getCode'
+                echo "Workspace: ${WORKSPACE}"
             }
         }
         
