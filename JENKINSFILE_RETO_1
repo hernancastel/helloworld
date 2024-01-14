@@ -25,6 +25,22 @@ pipeline   {
             }
         }  
 
+         stage('Security') {
+            steps {
+                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE' ){
+                    bat '''
+                        C:\\Users\\54116\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\bandit --exit-zero -r . -f custom -o bandit.out --severity-level medium --msg-template "{abspath}:{line}: [{test_id}] {msg}"
+                        whoami
+                        hostname
+                    '''
+                    recordIssues tools: [pyLint(name: 'bandit', pattern: 'bandit.out')], qualityGates : [
+                    [threshold: 2, type: 'TOTAL', unstable: true], 
+                    [threshold: 4, type: 'TOTAL', unstable: false]]
+                    echo "el Workspace es: ${WORKSPACE}"
+                }
+            }
+        }
+
         stage ('Cobertura') {
            steps {
                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
@@ -54,25 +70,7 @@ pipeline   {
             }
         }
 
-        
-
-        stage('Security') {
-            steps {
-                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE' ){
-                    bat '''
-                        C:\\Users\\54116\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\bandit --exit-zero -r . -f custom -o bandit.out --severity-level medium --msg-template "{abspath}:{line}: [{test_id}] {msg}"
-                        whoami
-                        hostname
-                    '''
-                    recordIssues tools: [pyLint(name: 'bandit', pattern: 'bandit.out')], qualityGates : [
-                    [threshold: 2, type: 'TOTAL', unstable: true], 
-                    [threshold: 4, type: 'TOTAL', unstable: false]]
-                    echo "el Workspace es: ${WORKSPACE}"
-                }
-            }
-        }
-
-          
+                      
      
         stage('Performance') {
             agent {label 'windows'}
