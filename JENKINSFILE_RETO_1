@@ -59,7 +59,6 @@ pipeline   {
 
         stage('Static'){
             steps {
-                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE' ){
                     bat '''
                          C:\\Users\\54116\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\flake8 --exit-zero --format=pylint app > flake8.out
                         whoami
@@ -69,7 +68,6 @@ pipeline   {
                         [threshold: 8,  type: 'TOTAL', unstable: true],
                         [threshold: 10, type: 'TOTAL', unstable: false]]
                     echo "el Workspace es: ${WORKSPACE}"
-                }
             }
         }
     
