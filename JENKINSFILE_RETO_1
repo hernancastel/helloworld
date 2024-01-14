@@ -26,13 +26,15 @@ pipeline   {
        
         stage ('Cobertura') {
            steps {
-               bat '''
-                   SET PYTHONPATH=.
-                   C:\\Users\\54116\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\coverage xml
-                   whoami
-                   hostname
-               '''
-              cobertura coberturaReportFile: 'coverage.xml', conditionalCoverageTargets: '100,20,40', lineCoverageTargets: '100,20,30',  failUnstable: false
+               catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                   bat '''
+                       SET PYTHONPATH=.
+                       C:\\Users\\54116\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\coverage xml
+                       whoami
+                       hostname
+                   '''
+                  cobertura coberturaReportFile: 'coverage.xml', conditionalCoverageTargets: '100,80,90', lineCoverageTargets: '100,85,95',  failUnstable: false
+                }
             }
         }
         
