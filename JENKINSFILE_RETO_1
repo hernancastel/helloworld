@@ -5,7 +5,7 @@ pipeline   {
            agent { label 'windows'}
            steps {
                 // Obtener codigo del repo
-                git 'https://github.com/hernancastel/helloworld.git'
+                git branch: 'feature_fix_coverage', url: 'https://github.com/hernancastel/helloworld.git'
                 stash includes: '**/*', name: 'getCode'
                 echo "el Workspace es: ${WORKSPACE}"
             }
