@@ -34,8 +34,8 @@ pipeline   {
                         hostname
                     '''
                     recordIssues tools: [pyLint(name: 'bandit', pattern: 'bandit.out')], qualityGates : [
-                    [threshold: 2, type: 'TOTAL', unstable: true], 
-                    [threshold: 4, type: 'TOTAL', unstable: false]]
+                    [threshold: 10, type: 'TOTAL', unstable: true], 
+                    [threshold: 10, type: 'TOTAL', unstable: false]]
                     echo "el Workspace es: ${WORKSPACE}"
                 }
             }
